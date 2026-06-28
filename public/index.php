@@ -6,10 +6,10 @@ $user = currentUser();
 
 $myItineraries = [];
 if ($user) {
-    $db = getDB();
-    $stmt = $db->prepare("SELECT * FROM itineraries WHERE user_id = ? ORDER BY created_at DESC LIMIT 3");
-    $stmt->execute([$user['id']]);
-    $myItineraries = $stmt->fetchAll();
+  $db = getDB();
+  $stmt = $db->prepare("SELECT * FROM itineraries WHERE user_id = ? ORDER BY created_at DESC LIMIT 3");
+  $stmt->execute([$user['id']]);
+  $myItineraries = $stmt->fetchAll();
 }
 
 include __DIR__ . '/../includes/header.php';
@@ -33,14 +33,15 @@ include __DIR__ . '/../includes/header.php';
         <div class="card">
           <div class="card-body">
             <h3><?= e($it['title']) ?></h3>
-            <p>📅 <?= e((string)$it['days']) ?> ngày<?= $it['preferences'] ? ' · ' . e($it['preferences']) : '' ?></p>
+            <p>📅 <?= e((string) $it['days']) ?> ngày<?= $it['preferences'] ? ' · ' . e($it['preferences']) : '' ?></p>
             <span class="badge"><?= e(date('d/m/Y', strtotime($it['created_at']))) ?></span>
           </div>
         </div>
       <?php endforeach; ?>
     </div>
   <?php else: ?>
-    <p class="section-sub">Bạn chưa có lịch trình nào. <a href="<?= url('/public/itinerary.php') ?>">Tạo lịch trình đầu tiên ngay!</a></p>
+    <p class="section-sub">Bạn chưa có lịch trình nào. <a href="<?= url('/public/itinerary.php') ?>">Tạo lịch trình đầu tiên
+        ngay!</a></p>
   <?php endif; ?>
 <?php else: ?>
   <section class="hero">
@@ -60,16 +61,21 @@ include __DIR__ . '/../includes/header.php';
 <div class="grid">
   <?php foreach ($featured as $d): ?>
     <a href="<?= url('/public/destination.php') ?>?slug=<?= e($d['slug']) ?>" class="card">
-      <div class="card-img">🌄</div>
+      <div class="card-img">
+        <?php if (!empty($d['image_url'])): ?>
+          <img src="<?= e($d['image_url']) ?>" alt="<?= e($d['name']) ?>" style="width:100%;height:100%;object-fit:cover;">
+        <?php else: ?>
+          🌄
+        <?php endif; ?>
+      </div>
       <div class="card-body">
         <h3><?= e($d['name']) ?></h3>
         <p><?= e($d['short_desc']) ?></p>
-        <span class="badge">⭐ <?= e((string)$d['rating']) ?></span>
-        <span class="badge">~<?= e((string)$d['avg_visit_hours']) ?>h</span>
+        <span class="badge">⭐ <?= e((string) $d['rating']) ?></span>
+        <span class="badge">~<?= e((string) $d['avg_visit_hours']) ?>h</span>
       </div>
     </a>
   <?php endforeach; ?>
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
-
