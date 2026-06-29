@@ -1,13 +1,4 @@
 <?php
-/**
- * Trình đọc file .env đơn giản (không cần composer/thư viện ngoài).
- * Đọc các dòng dạng KEY=VALUE từ file .env ở thư mục gốc project
- * và nạp vào getenv()/putenv() để config/*.php sử dụng.
- *
- * File .env KHÔNG được đẩy lên Git (đã có trong .gitignore).
- * Dùng .env.example làm mẫu để biết cần khai báo biến gì.
- */
-
 function loadEnv(string $path): void
 {
     if (!is_file($path)) {
@@ -24,13 +15,12 @@ function loadEnv(string $path): void
             continue;
         }
         [$key, $value] = array_map('trim', explode('=', $line, 2));
-        // Bỏ dấu nháy nếu có: KEY="value" hoặc KEY='value'
         $value = trim($value, "\"'");
 
-        if (getenv($key) === false) {
-            putenv("{$key}={$value}");
-            $_ENV[$key] = $value;
-        }
+        // Sửa: dùng putenv luôn, không check getenv trước
+        putenv("{$key}={$value}");
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
     }
 }
 

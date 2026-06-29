@@ -1,6 +1,8 @@
 <?php
+require_once __DIR__ . '/../config/env.php';
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/ai.php';
+
 
 session_start();
 
@@ -56,8 +58,14 @@ function getDestinationsSummaryForAI(): string
     foreach ($destinations as $d) {
         $lines[] = sprintf(
             "- %s (slug:%s): %s | địa chỉ: %s | thời gian tham quan ~%sh | mức chi phí: %s | rating %s | tags: %s",
-            $d['name'], $d['slug'], $d['short_desc'], $d['address'] ?: 'chưa cập nhật',
-            $d['avg_visit_hours'], $d['price_level'], $d['rating'], $d['tags']
+            $d['name'],
+            $d['slug'],
+            $d['short_desc'],
+            $d['address'] ?: 'chưa cập nhật',
+            $d['avg_visit_hours'],
+            $d['price_level'],
+            $d['rating'],
+            $d['tags']
         );
     }
     return implode("\n", $lines);
